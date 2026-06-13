@@ -139,8 +139,11 @@ fun LoginScreen(
                                 javaScriptCanOpenWindowsAutomatically = true
                                 mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                                 
-                                // User Agent simulando Safari no macOS para evitar bloqueio de "disallowed_useragent" no Login Google
-                                userAgentString = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Safari/605.1.15"
+                                // Burla a detecção de WebView do Google removendo as flags "; wv" e "Version/X.X" do User-Agent padrão do dispositivo.
+                                val defaultUa = userAgentString
+                                userAgentString = defaultUa
+                                    .replace("; wv", "")
+                                    .replace(Regex("Version/\\d+\\.\\d+\\s?"), "")
                             }
                             webViewClient = object : WebViewClient() {
                                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
