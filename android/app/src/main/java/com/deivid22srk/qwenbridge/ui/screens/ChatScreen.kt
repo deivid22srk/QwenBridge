@@ -56,7 +56,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
             TopAppBar(
                 title = {
                     Box(modifier = Modifier.clickable { showModelMenu = true }) {
-                        Row(verticalAlignment = Alignment.CenterVertizontally) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 text = selectedModel,
                                 color = Color.White,
@@ -143,7 +143,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertizontally
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     OutlinedTextField(
                         value = inputText,
@@ -247,7 +247,7 @@ fun MessageBubble(message: ChatUiMessage) {
                                 .fillMaxWidth()
                                 .clickable { isThinkingExpanded = !isThinkingExpanded },
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertizontally
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = "Pensamento do Modelo",

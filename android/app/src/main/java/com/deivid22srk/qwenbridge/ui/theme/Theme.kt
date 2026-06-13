@@ -28,7 +28,7 @@ private val DarkColorScheme = darkColorScheme(
 fun QwenBridgeTheme(
     content: @Composable () -> Unit
 ) {
-    val view = LocalView::current
+    val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window

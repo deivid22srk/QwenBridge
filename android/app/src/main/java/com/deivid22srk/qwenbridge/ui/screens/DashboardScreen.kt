@@ -87,7 +87,7 @@ fun DashboardScreen(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertizontally
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
                             Text(
@@ -95,7 +95,7 @@ fun DashboardScreen(
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.White
                             )
-                            Row(verticalAlignment = Alignment.CenterVertizontally) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
                                 Box(
                                     modifier = Modifier
                                         .size(10.dp)
@@ -132,7 +132,7 @@ fun DashboardScreen(
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertizontally
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         OutlinedTextField(
                             value = portInput,
@@ -170,7 +170,7 @@ fun DashboardScreen(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertizontally
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "Contas Qwen Conectadas",
@@ -233,7 +233,7 @@ fun DashboardScreen(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertizontally
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "Console de Logs do Servidor",
@@ -272,7 +272,7 @@ fun AccountRow(
             .border(1.dp, BorderLight, RoundedCornerShape(12.dp))
             .padding(12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertizontally
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
@@ -287,7 +287,7 @@ fun AccountRow(
             )
         }
 
-        Row(verticalAlignment = Alignment.CenterVertizontally) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Switch(
                 checked = account.isActive,
                 onCheckedChange = onToggleActive,

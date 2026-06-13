@@ -22,6 +22,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
+import io.ktor.utils.io.writeStringUtf8
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -118,7 +120,7 @@ class QwenBridgeServer @Inject constructor(
     private val qwenClient: QwenClient,
     private val logger: AppLogger
 ) {
-    private var serverEngine: CIOApplicationEngine? = null
+    private var serverEngine: ApplicationEngine? = null
     private val serverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val _isServerRunning = MutableStateFlow(false)
@@ -268,7 +270,7 @@ class QwenBridgeServer @Inject constructor(
                         )
                     )
                 )
-                writeStringUtf8("data: ${json.encodeToString(OpenAiChunk.serializer(), initialChunk)}\n\n")
+                writeStringUtf8("data: ${json.encodeToString(initialChunk)}\n\n")
 
                 var finalParentId = parentId
 
@@ -294,7 +296,7 @@ class QwenBridgeServer @Inject constructor(
                                     )
                                 )
                             )
-                            writeStringUtf8("data: ${json.encodeToString(OpenAiChunk.serializer(), chunk)}\n\n")
+                            writeStringUtf8("data: ${json.encodeToString(chunk)}\n\n")
                         }
                         is QwenStreamEvent.Thinking -> {
                             val chunk = OpenAiChunk(
@@ -308,7 +310,7 @@ class QwenBridgeServer @Inject constructor(
                                     )
                                 )
                             )
-                            writeStringUtf8("data: ${json.encodeToString(OpenAiChunk.serializer(), chunk)}\n\n")
+                            writeStringUtf8("data: ${json.encodeToString(chunk)}\n\n")
                         }
                         is QwenStreamEvent.SessionUpdated -> {
                             finalParentId = event.messageId
@@ -336,7 +338,7 @@ class QwenBridgeServer @Inject constructor(
                                     )
                                 )
                             )
-                            writeStringUtf8("data: ${json.encodeToString(OpenAiChunk.serializer(), doneChunk)}\n\n")
+                            writeStringUtf8("data: ${json.encodeToString(doneChunk)}\n\n")
                             writeStringUtf8("data: [DONE]\n\n")
                         }
                     }

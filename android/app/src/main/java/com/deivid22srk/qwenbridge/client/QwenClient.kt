@@ -2,6 +2,7 @@ package com.deivid22srk.qwenbridge.client
 
 import com.deivid22srk.qwenbridge.utils.AppLogger
 import io.ktor.client.*
+import io.ktor.client.call.body
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
