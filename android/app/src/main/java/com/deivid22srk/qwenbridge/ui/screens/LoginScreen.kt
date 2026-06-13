@@ -139,11 +139,9 @@ fun LoginScreen(
                                 javaScriptCanOpenWindowsAutomatically = true
                                 mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                                 
-                                // Burla a detecção de WebView do Google removendo as flags "; wv" e "Version/X.X" do User-Agent padrão do dispositivo.
-                                val defaultUa = userAgentString
-                                userAgentString = defaultUa
-                                    .replace("; wv", "")
-                                    .replace(Regex("Version/\\d+\\.\\d+\\s?"), "")
+                                // Usar User Agent de Safari no iPhone para evitar o bloqueio de "disallowed_useragent" no Google Login
+                                // e evitar a necessidade de headers "sec-ch-ua" (Client Hints) do Chromium que causam bloqueios na API do Qwen.
+                                userAgentString = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1"
                             }
                             webViewClient = object : WebViewClient() {
                                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {

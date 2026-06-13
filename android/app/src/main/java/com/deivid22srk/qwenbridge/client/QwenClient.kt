@@ -150,7 +150,7 @@ class QwenClient @Inject constructor(
         }
     }
 
-    private val defaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+    private val defaultUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1"
 
     suspend fun createChatSession(cookie: String, userAgent: String?, model: String): String? {
         val ua = if (userAgent.isNullOrBlank()) defaultUserAgent else userAgent
@@ -161,6 +161,8 @@ class QwenClient @Inject constructor(
             val response: HttpResponse = httpClient.post(url) {
                 headers {
                     append(HttpHeaders.ContentType, "application/json")
+                    append(HttpHeaders.Accept, "application/json, text/plain, */*")
+                    append(HttpHeaders.AcceptLanguage, "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7")
                     append(HttpHeaders.Cookie, cookie)
                     append("User-Agent", ua)
                     append("Origin", "https://chat.qwen.ai")
@@ -257,6 +259,8 @@ class QwenClient @Inject constructor(
             httpClient.preparePost(url) {
                 headers {
                     append(HttpHeaders.ContentType, "application/json")
+                    append(HttpHeaders.Accept, "application/json, text/plain, */*")
+                    append(HttpHeaders.AcceptLanguage, "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7")
                     append(HttpHeaders.Cookie, cookie)
                     append("User-Agent", ua)
                     append("Origin", "https://chat.qwen.ai")
