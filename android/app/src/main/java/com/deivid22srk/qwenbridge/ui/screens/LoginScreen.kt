@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.webkit.WebChromeClient
+import android.webkit.WebSettings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -123,11 +125,22 @@ fun LoginScreen(
                     factory = { context ->
                         WebView(context).apply {
                             webViewInstance = this
+                            
+                            // Habilitar suporte completo a cookies (incluindo cookies de terceiros para login Google)
+                            CookieManager.getInstance().setAcceptCookie(true)
+                            CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
+                            
+                            webChromeClient = WebChromeClient()
+                            
                             settings.apply {
                                 javaScriptEnabled = true
                                 domStorageEnabled = true
                                 databaseEnabled = true
-                                userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+                                javaScriptCanOpenWindowsAutomatically = true
+                                mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                                
+                                // User Agent simulando Safari no macOS para evitar bloqueio de "disallowed_useragent" no Login Google
+                                userAgentString = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Safari/605.1.15"
                             }
                             webViewClient = object : WebViewClient() {
                                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
