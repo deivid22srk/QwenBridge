@@ -38,6 +38,7 @@ fun LoginScreen(
     var showWebView by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     var webViewInstance by remember { mutableStateOf<WebView?>(null) }
+    var loginTriggered by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -103,6 +104,7 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             if (email.isNotBlank() && email.contains("@")) {
+                                loginTriggered = false
                                 showWebView = true
                             }
                         },
@@ -148,26 +150,44 @@ fun LoginScreen(
                                     isLoading = true
                                 }
 
-                                override fun onPageFinished(view: WebView?, url: String?) {
-                                    isLoading = false
-                                    val currentUrl = url ?: ""
-                                    // Se o redirecionamento pós-login ocorrer para a home ou chat
-                                    if (currentUrl.contains("chat.qwen.ai") &&
-                                        (!currentUrl.contains("/auth") && !currentUrl.contains("/login"))
-                                    ) {
-                                        val cookieManager = CookieManager.getInstance()
-                                        val cookies = cookieManager.getCookie("https://chat.qwen.ai")
-                                        if (!cookies.isNullOrBlank() &&
-                                            (cookies.contains("session") || cookies.contains("token") || cookies.contains("trace_id"))
-                                        ) {
-                                            onLoginSuccess(
-                                                email,
-                                                cookies,
-                                                settings.userAgentString
-                                            )
-                                        }
-                                    }
-                                }
+                                 override fun onPageFinished(view: WebView?, url: String?) {
+                                     isLoading = false
+                                     val currentUrl = url ?: ""
+                                     // Se o redirecionamento pós-login ocorrer para a home ou chat
+                                     if (currentUrl.contains("chat.qwen.ai") &&
+                                         (!currentUrl.contains("/auth") && !currentUrl.contains("/login"))
+                                     ) {
+                                         val cookieManager = CookieManager.getInstance()
+                                         cookieManager.flush()
+
+                                         val extractAndNotify = {
+                                             if (!loginTriggered) {
+                                                 val mergedCookies = getMergedCookies(cookieManager)
+                                                 if (!mergedCookies.isNullOrBlank() &&
+                                                     (mergedCookies.contains("session") || 
+                                                      mergedCookies.contains("token") || 
+                                                      mergedCookies.contains("trace_id") ||
+                                                      mergedCookies.contains("qwen"))
+                                                 ) {
+                                                     loginTriggered = true
+                                                     onLoginSuccess(
+                                                         email,
+                                                         mergedCookies,
+                                                         settings.userAgentString
+                                                     )
+                                                 }
+                                             }
+                                         }
+
+                                         // Tenta extrair imediatamente
+                                         extractAndNotify()
+
+                                         // Tenta novamente após 1.5 segundos para garantir que cookies assíncronos foram salvos
+                                         view?.postDelayed({
+                                             extractAndNotify()
+                                         }, 1500)
+                                     }
+                                 }
                             }
                             loadUrl("https://chat.qwen.ai/auth")
                         }
@@ -190,4 +210,25 @@ fun LoginScreen(
             }
         }
     }
+}
+
+private fun getMergedCookies(cookieManager: CookieManager): String {
+    val domains = listOf("https://chat.qwen.ai", "https://qwen.ai", "https://auth.qwen.ai")
+    val cookieMap = LinkedHashMap<String, String>()
+    
+    for (domain in domains) {
+        val cookieStr = cookieManager.getCookie(domain) ?: continue
+        cookieStr.split(";").forEach { cookie ->
+            val parts = cookie.split("=", limit = 2)
+            if (parts.size == 2) {
+                val key = parts[0].trim()
+                val value = parts[1].trim()
+                if (key.isNotEmpty()) {
+                    cookieMap[key] = value
+                }
+            }
+        }
+    }
+    
+    return cookieMap.entries.joinToString("; ") { "${it.key}=${it.value}" }
 }
