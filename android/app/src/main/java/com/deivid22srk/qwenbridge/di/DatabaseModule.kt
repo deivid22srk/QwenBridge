@@ -4,6 +4,7 @@ import android.content.Context
 import com.deivid22srk.qwenbridge.database.AccountDao
 import com.deivid22srk.qwenbridge.database.LogDao
 import com.deivid22srk.qwenbridge.database.QwenBridgeDatabase
+import com.deivid22srk.qwenbridge.database.SessionMappingDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
